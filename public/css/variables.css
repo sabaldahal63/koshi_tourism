@@ -1,0 +1,35 @@
+/* ────────────────────────────────────────────────────────────────
+   KoshiHub – Design Tokens / CSS Custom Properties
+   ──────────────────────────────────────────────────────────────── */
+:root {
+  --primary:         #e8b84b;
+  --primary-dark:    #c9952b;
+  --primary-light:   #f5d47a;
+  --accent:          #3b82f6;
+  --accent-emerald:  #10b981;
+  --danger:          #ef4444;
+
+  --bg-base:         #030712;
+  --bg-surface:      #0b1120;
+  --bg-card:         #111827;
+  --bg-hover:        #1c2b43;
+  --border-color:    rgba(255,255,255,0.07);
+
+  --text-primary:    #f9fafb;
+  --text-secondary:  #9ca3af;
+  --text-muted:      #6b7280;
+
+  --font-sans:       'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-display:    'Outfit', system-ui, sans-serif;
+
+  --radius-sm:       10px;
+  --radius-md:       16px;
+  --radius-lg:       22px;
+  --radius-xl:       32px;
+
+  --shadow-sm:  0 2px  8px rgba(0,0,0,.45);
+  --shadow-md:  0 8px 24px rgba(0,0,0,.55);
+  --shadow-lg:  0 16px 48px rgba(0,0,0,.65);
+
+  --transition: all .25s cubic-bezier(.4,0,.2,1);
+}
