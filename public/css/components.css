@@ -1,8 +1,8 @@
-/* ─────────────────────────────────────────────────────────────────
+/* 
    KoshiHub – Component Styles (Modal, Bookings, Toast)
-   ───────────────────────────────────────────────────────────────── */
+  */
 
-/* ── Booking Modal ──────────────────────────────────────────────── */
+/*  Booking*/
 .modal-overlay {
   position:fixed; inset:0; z-index:1000;
   background:rgba(3,7,18,.8);
@@ -49,7 +49,7 @@
 .breakdown-row { display:flex; justify-content:space-between; padding:4px 0; font-size:14px; color:var(--text-secondary); }
 .breakdown-row.total { font-size:16px; font-weight:700; color:var(--primary); margin-top:4px; border-top:1px solid var(--border-color); padding-top:10px; }
 
-/* ── Toast Notification ─────────────────────────────────────────── */
+/*  Toast Notification */
 .toast-notification {
   position:fixed; bottom:32px; left:50%; transform:translateX(-50%) translateY(20px);
   z-index:2000; opacity:0; visibility:hidden; transition:all .3s cubic-bezier(.4,0,.2,1);
@@ -61,7 +61,7 @@
 .toast-icon { background:var(--accent-emerald); color:white; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; }
 .toast-msg  { font-size:14px; font-weight:600; white-space:nowrap; }
 
-/* ── Bookings Page ──────────────────────────────────────────────── */
+/* ── Bookings Page ───────────────────────────────── */
 .bookings-list { display:flex; flex-direction:column; gap:20px; }
 .booking-card {
   background:var(--bg-card); border:1px solid var(--border-color);
