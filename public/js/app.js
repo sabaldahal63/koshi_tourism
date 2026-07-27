@@ -21,7 +21,7 @@
     localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
   }
 
-  // ── Badge counter ────────────────────────────────────────────────────────
+  // Badge counter 
   function updateBadge() {
     const badge = document.getElementById('booking-count-badge');
     if (!badge) return;
@@ -34,7 +34,7 @@
     }
   }
 
-  // ── Toast notification ───────────────────────────────────────────────────
+  // ── Toast notification 
   function showToast(msg) {
     const toast = document.getElementById('toast-notif');
     if (!toast) return;
@@ -44,7 +44,7 @@
     setTimeout(() => toast.classList.remove('show'), 3000);
   }
 
-  // ── Modal state ──────────────────────────────────────────────────────────
+  //  Modal state 
   let _currentBooking = {};
 
   function openBooking(type, id, name, image, pricePerUnit) {

@@ -111,7 +111,7 @@
       <form id="book-modal-form">
         <div class="form-group">
           <label for="book-name">Lead Guest Full Name</label>
-          <input type="text" id="book-name" required placeholder="e.g. Ram Prasad Shrestha">
+          <input type="text" id="book-name" required placeholder="e.g. Nabin Adhikari">
         </div>
         <div class="form-group">
           <label for="book-email">Email Address</label>
