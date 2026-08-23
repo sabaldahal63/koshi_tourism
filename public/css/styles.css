@@ -1,6 +1,4 @@
-/* ─────────────────────────────────────────────────────────────────
-   KoshiHub – Base / Global Styles
-   ───────────────────────────────────────────────────────────────── */
+/*  KoshiHub – Base / Global Styles */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { scroll-behavior: smooth; font-size: 16px; }
@@ -14,18 +12,19 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── Layout ─────────────────────────────────────────────────────── */
+/*  Layout */
 .container   { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 .view-section { padding: 100px 0 60px; }
 
-/* ── Typography ─────────────────────────────────────────────────── */
+/*  Typography  */
 h1,h2,h3 { font-family: var(--font-display); line-height: 1.25; }
 
-/* ── Navigation ─────────────────────────────────────────────────── */
+/*  Navigation  */
 #main-header {
   position: fixed; top: 0; left: 0; right: 0; z-index: 900;
   background: rgba(3,7,18,.85);
-  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border-color);
   padding: 0 24px;
   height: 64px;
@@ -54,7 +53,7 @@ nav         { flex:1; }
 }
 .nav-cta:hover { background:var(--primary-dark); transform:translateY(-1px); }
 
-/* ── Hero ───────────────────────────────────────────────────────── */
+/*  Hero  */
 .hero-banner {
   border-radius:var(--radius-lg); overflow:hidden; min-height:480px;
   display:flex; align-items:flex-end; position:relative;
@@ -75,7 +74,7 @@ nav         { flex:1; }
 .hero-content h1 span { color:var(--primary); }
 .hero-content p { font-size:16px; color:var(--text-secondary); max-width:600px; }
 
-/* ── Search ─────────────────────────────────────────────────────── */
+/*  Search  */
 .search-container { margin: -20px 0 40px; }
 .search-panel {
   background:var(--bg-card); border:1px solid var(--border-color);
@@ -99,7 +98,7 @@ nav         { flex:1; }
 }
 .search-submit:hover { background:var(--primary-dark); transform:translateY(-2px); }
 
-/* ── Stats ──────────────────────────────────────────────────────── */
+/*  Stats  */
 .stats-grid {
   display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:48px;
 }
@@ -112,12 +111,12 @@ nav         { flex:1; }
 .stat-card h3 { font-size:36px; font-weight:800; color:var(--primary); margin-bottom:4px; font-family:var(--font-display); }
 .stat-card p  { font-size:13px; color:var(--text-secondary); }
 
-/* ── Section Header ─────────────────────────────────────────────── */
+/*  Section Header  */
 .section-header { text-align:center; margin-bottom:40px; }
 .section-header h2 { font-size:clamp(26px,3vw,40px); font-weight:800; margin-bottom:10px; }
 .section-header p  { color:var(--text-secondary); max-width:600px; margin:0 auto; font-size:16px; }
 
-/* ── Card Grid ──────────────────────────────────────────────────── */
+/*  Card Grid  */
 .card-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:24px; }
 .travel-card {
   background:var(--bg-card); border:1px solid var(--border-color);
@@ -132,7 +131,9 @@ nav         { flex:1; }
   position:absolute; top:12px; left:12px;
   background:rgba(0,0,0,.65); color:white;
   padding:4px 12px; border-radius:99px; font-size:12px; font-weight:600;
-  backdrop-filter:blur(8px);
+ 
+  -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
 }
 .card-badge {
   position:absolute; top:12px; right:12px;
@@ -154,7 +155,7 @@ nav         { flex:1; }
 }
 .card-btn:hover { background:var(--primary-dark); transform:translateY(-2px); }
 
-/* ── Filters ────────────────────────────────────────────────────── */
+/*Filters*/
 .grid-filters { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:28px; }
 .filter-btn {
   background:var(--bg-card); border:1px solid var(--border-color);
@@ -165,7 +166,7 @@ nav         { flex:1; }
 .filter-btn:hover  { border-color:var(--primary); color:white; }
 .filter-btn.active { background:var(--primary); color:#030712; border-color:var(--primary); font-weight:700; }
 
-/* ── Amenities ──────────────────────────────────────────────────── */
+/*Amenities */
 .amenities-list { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
 .amenity-tag {
   background:rgba(16,185,129,.1); border:1px solid rgba(16,185,129,.2);
@@ -173,15 +174,16 @@ nav         { flex:1; }
 }
 .amenity-tag.muted { background:var(--bg-surface); color:var(--text-muted); border-color:var(--border-color); }
 
-/* ── Glass Panel ────────────────────────────────────────────────── */
+/*  Glass Panel */
 .glass-panel {
   background:rgba(11,17,32,.7); border:1px solid var(--border-color);
-  border-radius:var(--radius-md); backdrop-filter:blur(16px); padding:32px;
+  border-radius:var(--radius-md);
+   -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px); padding:32px;
 }
 
-/* ── Planner Layout ─────────────────────────────────────────────── */
+/*  Planner Layout */
 .planner-layout { display:grid; grid-template-columns:380px 1fr; gap:28px; align-items:start; }
-.planner-form-panel {}
 .planner-output-panel {
   background:var(--bg-card); border:1px solid var(--border-color);
   border-radius:var(--radius-md); padding:32px; min-height:400px;
@@ -189,16 +191,14 @@ nav         { flex:1; }
 .planner-placeholder { text-align:center; padding:60px 20px; }
 .planner-placeholder h3 { font-size:22px; margin-bottom:8px; }
 .planner-placeholder p  { color:var(--text-secondary); }
-.itinerary-result {}
 .day-list { display:flex; flex-direction:column; gap:12px; }
 .day-item { display:flex; gap:20px; align-items:flex-start; }
 .day-num  { background:var(--primary); color:#030712; border-radius:10px; padding:10px 14px; min-width:80px; text-align:center; font-weight:800; font-size:14px; }
 .day-num span { display:block; font-weight:400; font-size:11px; }
 .day-activity { background:var(--bg-surface); border:1px solid var(--border-color); border-radius:10px; padding:14px; flex:1; font-size:14px; color:var(--text-secondary); }
 
-/* ── Advisor Layout ─────────────────────────────────────────────── */
+/* Advisor Layout  */
 .advisor-layout { display:grid; grid-template-columns:280px 1fr; gap:28px; align-items:start; }
-.advisor-sidebar {}
 .quick-qs  { display:flex; flex-direction:column; gap:8px; }
 .quick-q-btn {
   background:var(--bg-surface); border:1px solid var(--border-color); border-radius:10px;
@@ -216,7 +216,6 @@ nav         { flex:1; }
 .bot-bubble    { align-items:flex-start; }
 .user-msg      { align-self:flex-end; max-width:75%; }
 .bubble-avatar { width:36px; height:36px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
-.bubble-content {}
 .bubble-content strong { font-size:12px; color:var(--primary); display:block; margin-bottom:4px; }
 .bubble-content p, .user-msg p {
   background:var(--bg-surface); border:1px solid var(--border-color);
@@ -236,7 +235,7 @@ nav         { flex:1; }
 }
 .chat-send-btn:hover { background:var(--primary-dark); }
 
-/* ── Footer ─────────────────────────────────────────────────────── */
+/* Footer*/
 footer {
   background:var(--bg-surface); border-top:1px solid var(--border-color); padding:60px 0 24px;
 }
@@ -265,10 +264,10 @@ footer {
 .social-icons a { font-size:13px; color:var(--text-muted); text-decoration:none; transition:var(--transition); }
 .social-icons a:hover { color:var(--primary); }
 
-/* ── Animations ─────────────────────────────────────────────────── */
+/* Animations */
 @keyframes bubbleIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
 
-/* ── Spinner ─────────────────────────────────────────────────────── */
+/* Spinner  */
 .spinner {
   width:44px; height:44px;
   border:4px solid var(--border-color);
@@ -279,7 +278,7 @@ footer {
 }
 @keyframes spin { to { transform:rotate(360deg); } }
 
-/* ── Responsive ─────────────────────────────────────────────────── */
+/* Responsive  */
 @media(max-width:900px){
   .stats-grid { grid-template-columns:repeat(2,1fr); }
   .footer-grid { grid-template-columns:1fr 1fr; }
@@ -292,7 +291,7 @@ footer {
   .hero-content { padding:24px; }
 }
 
-/* ── Form Elements ───────────────────────────────────────────────── */
+/*Form Elements*/
 .form-group { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
 .form-group label { font-size:12px; font-weight:600; color:var(--text-secondary); text-transform:uppercase; letter-spacing:.05em; }
 .form-group input,

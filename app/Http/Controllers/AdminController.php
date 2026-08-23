@@ -4,10 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Booking;
-use Illuminate\Support\Facades\Auth;
 
-class TourismController extends Controller
+class AdminController extends Controller
 {
+    public function __construct()
+    {
+        // Require admin session check
+    }
+
+    private function checkAuth()
+    {
+        if (!session('admin_logged_in')) {
+            return redirect()->route('admin.login')->withErrors(['error' => 'Please sign in with admin credentials to access this dashboard.']);
+        }
+        return null;
+    }
+
     private $destinations = [
         ['id'=>'everest','name'=>'Mount Everest & Sagarmatha Park','category'=>'adventure','location'=>'Solukhumbu','image'=>'assets/everest.png','rating'=>4.9,'reviews'=>1250,'elevation'=>'8,848m','desc'=>'The ultimate trekker\'s pilgrimage. Home to the world\'s highest peak, spectacular glaciers, high-altitude alpine terrain, and deep Sherpa Buddhist culture.','bestTime'=>'March to May, Sept to Nov','features'=>['Trekking','Sherpa Culture','Glaciers','Monasteries'],'price'=>199500],
         ['id'=>'ilam','name'=>'Kanyam & Ilam Tea Gardens','category'=>'nature','location'=>'Ilam','image'=>'assets/ilam.png','rating'=>4.7,'reviews'=>680,'elevation'=>'1,600m','desc'=>'Famous for its lush green tea gardens, beautiful mist-covered hills, and pleasant climate. Ideal for couples and photography enthusiasts.','bestTime'=>'October to December, Feb to April','features'=>['Tea Garden Tour','Horse Riding','Homestays','Nature Trails'],'price'=>46500],
@@ -31,121 +43,109 @@ class TourismController extends Controller
         ['id'=>'guide_lhamo','name'=>'Lhamo Tamang','specialty'=>'Spiritual Caving & Cultural Walks','experience'=>'6 Years','rating'=>4.7,'languages'=>['Nepali','English','Tibetan'],'rate'=>3500,'image'=>'assets/ilam.png'],
     ];
 
-    public function index()   { return view('home',    ['featured' => array_slice($this->destinations, 0, 3)]); }
-    public function explore() { return view('explore', ['destinations' => $this->destinations]); }
-    public function stay()    { return view('stay',    ['hotels' => $this->hotels]); }
-    public function planner() { return view('planner'); }
-    public function guides()  { return view('guides',  ['guides' => $this->guides]); }
-    public function advisor() { return view('advisor'); }
-    
-    public function bookings()
+    public function index()
     {
+        if ($authCheck = $this->checkAuth()) return $authCheck;
+
         try {
-            if (Auth::check()) {
-                $bookings = Booking::where('user_id', Auth::id())
-                                   ->orWhere('email', Auth::user()->email)
-                                   ->orderBy('created_at', 'desc')
-                                   ->get();
-            } else {
-                $bookings = Booking::orderBy('created_at', 'desc')->get();
-            }
+            $bookings = Booking::orderBy('created_at', 'desc')->get();
         } catch (\Exception $e) {
             $bookings = collect();
         }
-        return view('bookings', ['bookings' => $bookings]);
+
+        $totalRevenue     = $bookings->where('status', '!=', 'cancelled')->sum('total');
+        $totalBookings    = $bookings->count();
+        $hotelBookings    = $bookings->where('type', 'hotel')->count();
+        $guideBookings    = $bookings->where('type', 'guide')->count();
+        $destBookings     = $bookings->where('type', 'destination')->count();
+        $confirmedCount   = $bookings->where('status', 'confirmed')->count();
+        $completedCount   = $bookings->where('status', 'completed')->count();
+        $pendingCount     = $bookings->where('status', 'pending')->count();
+        $cancelledCount   = $bookings->where('status', 'cancelled')->count();
+
+        $hotelRevenue     = $bookings->where('type', 'hotel')->where('status', '!=', 'cancelled')->sum('total');
+        $guideRevenue     = $bookings->where('type', 'guide')->where('status', '!=', 'cancelled')->sum('total');
+        $destRevenue      = $bookings->where('type', 'destination')->where('status', '!=', 'cancelled')->sum('total');
+
+        return view('admin.dashboard', [
+            'bookings'        => $bookings,
+            'totalRevenue'    => $totalRevenue,
+            'totalBookings'   => $totalBookings,
+            'hotelBookings'   => $hotelBookings,
+            'guideBookings'   => $guideBookings,
+            'destBookings'    => $destBookings,
+            'confirmedCount'  => $confirmedCount,
+            'completedCount'  => $completedCount,
+            'pendingCount'    => $pendingCount,
+            'cancelledCount'  => $cancelledCount,
+            'hotelRevenue'    => $hotelRevenue,
+            'guideRevenue'    => $guideRevenue,
+            'destRevenue'     => $destRevenue,
+            'destinations'    => $this->destinations,
+            'hotels'          => $this->hotels,
+            'guides'          => $this->guides,
+        ]);
     }
 
-    public function getDestinationsApi() { return response()->json($this->destinations); }
-    public function getHotelsApi()       { return response()->json($this->hotels); }
-
-    public function getBookingsApi()
+    public function updateStatus(Request $request, $id)
     {
-        try {
-            if (Auth::check()) {
-                $bookings = Booking::where('user_id', Auth::id())
-                                   ->orWhere('email', Auth::user()->email)
-                                   ->orderBy('created_at', 'desc')
-                                   ->get();
-            } else {
-                $bookings = Booking::orderBy('created_at', 'desc')->get();
-            }
-            return response()->json(['success' => true, 'data' => $bookings]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'error' => $e->getMessage(), 'data' => []]);
+        if (!session('admin_logged_in')) {
+            return response()->json(['success' => false, 'error' => 'Unauthorized. Please log in.'], 401);
         }
-    }
 
-    public function storeBookingApi(Request $request)
-    {
         try {
-            $validated = $request->validate([
-                'type'           => 'required|string',
-                'item_id'        => 'nullable|string',
-                'title'          => 'required|string',
-                'image'          => 'nullable|string',
-                'price_per_unit' => 'nullable|numeric',
-                'name'           => 'required|string|max:255',
-                'email'          => 'required|email|max:255',
-                'date'           => 'required|string',
-                'guests'         => 'nullable|integer|min:1',
-                'nights'         => 'nullable|integer|min:1',
-                'total'          => 'required|numeric',
-                'payment_method' => 'nullable|string',
-                'payment_status' => 'nullable|string',
-                'transaction_id' => 'nullable|string',
+            $request->validate([
+                'status' => 'required|string|in:confirmed,pending,completed,cancelled',
             ]);
 
-            $userId = Auth::id();
+            $booking = Booking::findOrFail($id);
+            $booking->status = $request->status;
+            $booking->save();
 
-            // If not logged in, but the email matches an existing registered user, link it
-            if (!$userId) {
-                $existingUser = \App\Models\User::where('email', strtolower($validated['email']))->first();
-                if ($existingUser) {
-                    $userId = $existingUser->id;
-                }
-            }
-
-            $booking = Booking::create([
-                'user_id'        => $userId,
-                'type'           => $validated['type'],
-                'item_id'        => $validated['item_id'] ?? null,
-                'title'          => $validated['title'],
-                'image'          => $validated['image'] ?? null,
-                'price_per_unit' => $validated['price_per_unit'] ?? 0,
-                'name'           => $validated['name'],
-                'email'          => strtolower($validated['email']),
-                'date'           => $validated['date'],
-                'guests'         => $validated['guests'] ?? 1,
-                'nights'         => $validated['nights'] ?? 1,
-                'total'          => $validated['total'],
-                'status'         => 'confirmed',
-                'payment_method' => $validated['payment_method'] ?? 'unpaid',
-                'payment_status' => $validated['payment_status'] ?? 'pending',
-                'transaction_id' => $validated['transaction_id'] ?? null,
+            return response()->json([
+                'success' => true,
+                'message' => "Booking #{$id} status updated to " . ucfirst($request->status),
+                'status'  => $booking->status
             ]);
-
-            return response()->json(['success' => true, 'booking' => $booking, 'message' => 'Booking confirmed successfully!'], 201);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'error' => $e->getMessage()], 422);
         }
     }
 
-    public function cancelBookingApi($id)
+    public function destroy($id)
     {
-        try {
-            $booking = Booking::find($id);
-            if ($booking) {
-                // If user is logged in, only allow cancelling their own booking (or allow guest cancellation)
-                if (Auth::check() && $booking->user_id && $booking->user_id !== Auth::id()) {
-                    return response()->json(['success' => false, 'message' => 'Unauthorized action.'], 403);
-                }
+        if (!session('admin_logged_in')) {
+            return response()->json(['success' => false, 'error' => 'Unauthorized. Please log in.'], 401);
+        }
 
-                $booking->delete();
-                return response()->json(['success' => true, 'message' => 'Booking cancelled successfully.']);
-            }
-            return response()->json(['success' => false, 'message' => 'Booking not found.'], 404);
+        try {
+            $booking = Booking::findOrFail($id);
+            $booking->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => "Booking #{$id} has been permanently deleted from database."
+            ]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
         }
+    }
+
+    public function destinations()
+    {
+        if ($authCheck = $this->checkAuth()) return $authCheck;
+        return view('admin.destinations', ['destinations' => $this->destinations]);
+    }
+
+    public function hotels()
+    {
+        if ($authCheck = $this->checkAuth()) return $authCheck;
+        return view('admin.hotels', ['hotels' => $this->hotels]);
+    }
+
+    public function guides()
+    {
+        if ($authCheck = $this->checkAuth()) return $authCheck;
+        return view('admin.guides', ['guides' => $this->guides]);
     }
 }
